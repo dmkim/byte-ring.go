@@ -53,6 +53,15 @@ func (rb *RingBuffer) Read(p []byte) (n int, err error) {
     return
 }
 
+// Returns the content of the buffer without changing the next read byte.
+func (rb *RingBuffer) ReadAhead() (p []byte, n int, err error) {
+    start := rb.start
+    p := make([]byte, len(rb.b))
+    n, err := rb.Read(p)
+    rb.start = start
+    return p, n, err
+}
+
 func (rb *RingBuffer) Write(p []byte) (n int, err error) {
     for b := range p {
         rb.WriteByte(b)
