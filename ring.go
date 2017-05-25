@@ -10,7 +10,7 @@ type RingBuffer struct {
 	b     []byte
 	start int
 	end   int
-	size  int
+	size  int	
 }
 
 // Return true if the ring buffer is full, false otherwise.
@@ -48,50 +48,48 @@ func (rb *RingBuffer) ReadByte() (c byte, err error) {
 }
 
 func (rb *RingBuffer) Read(p []byte) (n int, err error) {
-	n = 0
-	for i := 0; i < len(p); i++ {
-		b, err := rb.ReadByte()
-		if err != nil {
-			return 0, err
-		}
-		p[i] = b
-		n++
-	}
-	return
+    n = 0
+    for i := 0; i < len(p); i++ {
+        b, err := rb.ReadByte()
+        if err != nil {
+            return 0, err
+        }
+        p[i] = b
+        n++
+    }
+    return
 }
 
 func (rb *RingBuffer) ReadNoChange(p []byte) (n int, err error) {
-	start := rb.start
-	size := rb.size
-	n, err = rb.Read(p)
-	rb.start = start
-	rb.size = size
-	return n, err
+    start := rb.start
+    size := rb.size
+    n, err = rb.Read(p)
+    rb.start = start
+    rb.size = size
+    return n, err
 }
 
 // Returns the content of the buffer without changing the next read byte.
 func (rb *RingBuffer) ReadAhead() (p []byte, n int, err error) {
-	start := rb.start
-	size := rb.size
-	p = make([]byte, len(rb.b))
-	n, err = rb.Read(p)
-	rb.start = start
-	rb.size = size
-	return p, n, err
+    start := rb.start
+    p = make([]byte, len(rb.b))
+    n, err = rb.Read(p)
+    rb.start = start
+    return p, n, err
 }
 
 func (rb *RingBuffer) Write(p []byte) (n int, err error) {
-	for _, b := range p {
-		rb.WriteByte(b)
-	}
-	return len(p), nil
+    for _, b := range p {
+        rb.WriteByte(b)
+    }
+    return len(p), nil
 }
 
 // Create a new RingBuffer of the specified size.
 func NewRingBuffer(size int) *RingBuffer {
 	rb := new(RingBuffer)
 	rb.b = make([]byte, size+1)
-	rb.start = 0
-	rb.end = 0
+    rb.start = 0
+    rb.end = 0
 	return rb
 }
